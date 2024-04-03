@@ -12,11 +12,11 @@ namespace GameZone.Services
 
         public IEnumerable<SelectListItem> GetSelectList()
         {
-            return _context.Devices.Select(d => new SelectListItem
-            {
-                Value = d.Id.ToString(),
-                Text = d.Name
-            }).ToList();
+            return _context.Devices
+                .Select(d => new SelectListItem{Value = d.Id.ToString(),Text = d.Name})
+                .OrderBy(d=>d.Text)
+                .AsNoTracking()
+                .ToList();
         }
     }
 }

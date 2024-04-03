@@ -4,13 +4,16 @@
     {
         private readonly IDevicesService _devicesService;
         private readonly ICategoriesService _categoriesService;
+        private readonly IGamesService _gamesServices;
 
         public GamesController(ApplicationDbContext context,
             ICategoriesService categoriesService,
-            IDevicesService devicesService)
+            IDevicesService devicesService,
+            IGamesService gamesServices)
         {
             _categoriesService = categoriesService;
             _devicesService = devicesService;
+            _gamesServices = gamesServices;
         }
 
         public IActionResult Index()
@@ -29,7 +32,7 @@
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CreateGameFormViewModel model)
+        public async Task<IActionResult> Create(CreateGameFormViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -37,9 +40,8 @@
                 model.Devices = _devicesService.GetSelectList();
                 return View(model);
             }
-            // Save Game To database
 
-            // save cover to server
+            await _gamesServices.Create(model);
 
             return RedirectToAction(nameof(Index));
         }
